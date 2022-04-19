@@ -51,7 +51,7 @@ def get_neighbors(row, col, rows, cols):
 
     
 
-def create_mine_field(rows, cols, mines):
+def create_mine_field(rows, cols, MINES):
     field = [[0 for _ in range(cols)] for _ in range(rows)]
     mine_positions = set()
 
@@ -69,7 +69,7 @@ def create_mine_field(rows, cols, mines):
     for mine in mine_positions:
         neighbors = get_neighbors(*mine, rows, cols)
         for r, c in neighbors:
-            if field[r][c] != -1 or field[r][c] != -2:
+            if field[r][c] != -1:
                 field[r][c] += 1
 
     return field
@@ -88,7 +88,7 @@ def draw(win, field, cover_field):
             is_flag = cover_field[i][j] == -2
             is_bomb = value == -1
 
-            if is_flag == -2:
+            if is_flag:
                 pygame.draw.rect(win, FLAG_RECT_COLOR, (x, y, SIZE, SIZE))
                 pygame.draw.rect(win, "black", (x, y, SIZE, SIZE), 2)
                 continue
