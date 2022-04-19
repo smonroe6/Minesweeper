@@ -18,6 +18,7 @@ SIZE = WIDTH / ROWS
 
 NUM_FONT = pygame.font.SysFont('comicsans', 20)
 LOST_FONT = pygame.font.SysFont('comicsans', 50)
+WIN_FONT = pygame.font.SysFont('comicsans', 30)
 
 NUM_COLORS = {1: "black", 2: "green", 3: "red", 4: "orange", 
                 5:"yellow", 6: "purple", 7: "blue", 8: "pink"}
@@ -133,12 +134,18 @@ def uncover_from_pos(row, col, cover_field, field):
             if value == 0 and cover_field[r][c] != -2:
                 q.put((r, c))
 
-            if cover_field[r][c] != -2:
+            if cover_field[r][c] != -2 and field[r][c] != -1:
                 cover_field[r][c] = 1
             visited.add((r, c))
 
 def draw_lost(win, text):
     text = LOST_FONT.render(text, 1, 'black')
+    win.blit(text, (WIDTH/2 - text.get_width() / 2,
+                    HEIGHT/2 - text.get_height()/2))
+    pygame.display.update()
+
+def draw_win(win, text):
+    text = WIN_FONT.render(text, 1, 'black')
     win.blit(text, (WIDTH/2 - text.get_width() / 2,
                     HEIGHT/2 - text.get_height()/2))
     pygame.display.update()
@@ -150,6 +157,7 @@ def main():
     flags = MINES
     clicks = 0
     lost = False
+    winner = False
 
     while run:
         for event in pygame.event.get():
@@ -180,7 +188,25 @@ def main():
                         flags -= 1
                         cover_field[row][col] = -2
 
+            #if flags == 0:
+             #   for pos in field[row][col]:
+              #      if pos == -1:
+               #         for pos in cover_field[row][col]:
+                #            if pos == -2:
+                 #               winner == True
 
+
+        if winner:
+            draw(win, field, cover_field)
+            draw_win(win, "Congrats!, You found all the mines! Game will restart. Close to not play again.")
+            pygame.time.delay(2000)
+
+            field = create_mine_field(ROWS, COLS, MINES)
+            cover_field = [[0 for _ in range(COLS)] for _ in range(ROWS)]
+            flags = MINES
+            clicks = 0
+            lost = False
+        
         if lost:
             draw(win, field, cover_field)
             draw_lost(win, "You lost!, Try again...")
