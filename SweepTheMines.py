@@ -18,7 +18,7 @@ SIZE = WIDTH / ROWS
 
 NUM_FONT = pygame.font.SysFont('comicsans', 20)
 LOST_FONT = pygame.font.SysFont('comicsans', 50)
-WIN_FONT = pygame.font.SysFont('comicsans', 30)
+WIN_FONT = pygame.font.SysFont('comicsans', 18)
 
 NUM_COLORS = {1: "black", 2: "green", 3: "red", 4: "orange", 
                 5:"yellow", 6: "purple", 7: "blue", 8: "pink"}
@@ -157,7 +157,6 @@ def main():
     flags = MINES
     clicks = 0
     lost = False
-    winner = False
 
     while run:
         for event in pygame.event.get():
@@ -188,24 +187,16 @@ def main():
                         flags -= 1
                         cover_field[row][col] = -2
 
-            #if flags == 0:
-             #   for pos in field[row][col]:
-              #      if pos == -1:
-               #         for pos in cover_field[row][col]:
-                #            if pos == -2:
-                 #               winner == True
 
-
-        if winner:
+        if flags == 0:
             draw(win, field, cover_field)
             draw_win(win, "Congrats!, You found all the mines! Game will restart. Close to not play again.")
-            pygame.time.delay(2000)
+            pygame.time.delay(2750)
 
             field = create_mine_field(ROWS, COLS, MINES)
             cover_field = [[0 for _ in range(COLS)] for _ in range(ROWS)]
             flags = MINES
             clicks = 0
-            lost = False
         
         if lost:
             draw(win, field, cover_field)
