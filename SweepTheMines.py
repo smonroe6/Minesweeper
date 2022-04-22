@@ -1,8 +1,6 @@
 import pygame
 import random
 from queue import Queue
-from sklearn import neighbors
-import time
 pygame.init()
 
 WIDTH, HEIGHT = 700, 800
