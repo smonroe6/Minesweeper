@@ -18,7 +18,7 @@ SIZE = WIDTH / ROWS
 
 NUM_FONT = pygame.font.SysFont('comicsans', 20)
 LOST_FONT = pygame.font.SysFont('comicsans', 50)
-WIN_FONT = pygame.font.SysFont('comicsans', 18)
+WIN_FONT = pygame.font.SysFont('comicsans', 30)
 
 NUM_COLORS = {1: "black", 2: "green", 3: "red", 4: "orange", 
                 5:"yellow", 6: "purple", 7: "blue", 8: "pink"}
@@ -141,13 +141,13 @@ def uncover_from_pos(row, col, cover_field, field):
 def draw_lost(win, text):
     text = LOST_FONT.render(text, 1, 'black')
     win.blit(text, (WIDTH/2 - text.get_width() / 2,
-                    HEIGHT/2 - text.get_height()/2))
+                    HEIGHT - text.get_height()*1.5))
     pygame.display.update()
 
 def draw_win(win, text):
     text = WIN_FONT.render(text, 1, 'black')
     win.blit(text, (WIDTH/2 - text.get_width() / 2,
-                    HEIGHT/2 - text.get_height()/2))
+                    HEIGHT - text.get_height()*1.5))
     pygame.display.update()
 
 def main():
@@ -157,6 +157,7 @@ def main():
     flags = MINES
     clicks = 0
     lost = False
+    winner = False
 
     while run:
         for event in pygame.event.get():
@@ -187,16 +188,29 @@ def main():
                         flags -= 1
                         cover_field[row][col] = -2
 
+            equal = 0
+            if flags == 0:
+                for row in field:
+                    for col in row:
+                        if col == -1:
+                            for list1 in cover_field:
+                                for val in list1:
+                                    if val == -2:
+                                        equal += 1
+                                        if equal == MINES:
+                                            winner = True
 
-        if flags == 0:
+
+        if winner:
             draw(win, field, cover_field)
-            draw_win(win, "Congrats!, You found all the mines! Game will restart. Close to not play again.")
-            pygame.time.delay(2750)
+            draw_win(win, "Winner! Game will restart. Close to not play again.")
+            pygame.time.delay(3250)
 
             field = create_mine_field(ROWS, COLS, MINES)
             cover_field = [[0 for _ in range(COLS)] for _ in range(ROWS)]
             flags = MINES
             clicks = 0
+            winner = False
         
         if lost:
             draw(win, field, cover_field)
